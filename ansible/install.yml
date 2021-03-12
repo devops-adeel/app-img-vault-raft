@@ -1,0 +1,7 @@
+---
+
+- hosts: default
+  # connection: local
+  become: yes
+  roles:
+    - ansible-role-vault

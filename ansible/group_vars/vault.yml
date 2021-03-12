@@ -1,0 +1,9 @@
+---
+# vault_server_list:
+vault_tls_disable: true
+vault_hsm_crypto_library: '/opt/nfast/toolkits/pkcs11/libcknfast.so'
+vault_hsm_slot: ''
+vault_hsm_pin: ''
+vault_hsm_generate_key: 'false'
+vault_hsm_key_label: 'HashiCorp'
+vault_hsm_hmac_key_label: 'hsm-hmac-key'
