@@ -5,7 +5,7 @@ set -o pipefail
 set -o nounset
 # set -o xtrace
 
-sudo dnf install epel-release -y
+sudo yum install epel-release -y
 sudo yum update -y
 sudo yum install wget -y
 sudo yum install ansible -y
