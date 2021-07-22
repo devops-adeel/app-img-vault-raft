@@ -12,7 +12,6 @@ source "googlecompute" "vault" {
   source_image      = var.source_image_id
   ssh_username      = var.ssh_username
   zone              = var.zone
-  skip_create_image = true
 }
 
 build {
@@ -32,8 +31,10 @@ build {
   provisioner "inspec" {
     profile          = "integration_tests"
     user             = "packer"
-    inspec_env_vars  = ["CHEF_LICENSE=accept"]
     max_retries      = 3
     valid_exit_codes = [100]
+    inspec_env_vars  = [
+    "CHEF_LICENSE=accept",
+    ]
   }
 }
