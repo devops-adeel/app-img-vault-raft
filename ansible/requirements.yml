@@ -1,0 +1,13 @@
+---
+
+- name: dev-sec.os-hardening
+  version: 6.2.0
+
+- name: dev-sec.ssh-hardening
+  version: 9.7.0
+
+- name: ansible-role-vault
+  src: https://github.com/jacobmammoliti/ansible-role-vault.git
+
+- name: google_cloud_ops_agents
+  src: https://github.com/GoogleCloudPlatform/google-cloud-ops-agents-ansible.git

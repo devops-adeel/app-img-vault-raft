@@ -1,7 +1,19 @@
 ---
-
 - hosts: default
-  # connection: local
   become: yes
   roles:
-    - ansible-role-vault
+    - role: dev-sec.os-hardening
+      vars:
+        os_ignore_users: packer
+
+    - role: dev-sec.ssh-hardening
+
+    - role: google_cloud_ops_agents
+      vars:
+        agent_type: monitoring
+
+    - role: google_cloud_ops_agents
+      vars:
+        agent_type: logging
+
+    - role: ansible-role-vault

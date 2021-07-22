@@ -1,0 +1,69 @@
+name: Packer
+
+on:
+  push:
+    paths:
+      - 'packer/**'
+      - '.github/workflows/packer-build.yml'
+
+jobs:
+  packer:
+    runs-on: ubuntu-latest
+    name: packer
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Initialise Packer
+        uses: devops-adeel/packer-github-actions@master
+        with:
+          command: init
+          target: packer/.
+
+      - name: Validate Template
+        uses: devops-adeel/packer-github-actions@master
+        with:
+          command: validate
+          arguments: -syntax-only
+          target: packer/.
+
+      - name: Import Secrets
+        id: secrets
+        uses: hashicorp/vault-action@v2.3.0
+        with:
+          url: https://tf-hcp-cluster-vault.vault.11eb33aa-fa85-0956-a769-0242ac11000f.aws.hashicorp.cloud:8200
+          method: github
+          githubToken: ${{ secrets.INSPEC_GH_TOKEN }}
+          namespace: admin/accelerator-gcp-vault
+          secrets: |
+            gcp/key/baker-accelerator-gcp-vault private_key_data
+
+      - name: Base64 Decode
+        id: write_file
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: creds.json
+          encodedString: ${{ steps.secrets.outputs.private_key_data }}
+
+      - name: Upload creds
+        uses: actions/upload-artifact@v2
+        with:
+          name: creds
+          path: ${{ steps.write_file.outputs.filePath }}
+
+      - name: Download creds
+        uses: actions/download-artifact@v2
+        with:
+          name: creds
+          path: packer
+
+      - name: Build Artifact
+        uses: devops-adeel/packer-github-actions@master
+        with:
+          command: build
+          arguments: "-on-error=abort"
+          target: packer/.
+        env:
+          PACKER_LOG: 1
+          GOOGLE_APPLICATION_CREDENTIALS: packer/creds.json

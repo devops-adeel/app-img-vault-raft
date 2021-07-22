@@ -1,3 +1,0 @@
----
-- name: installing vault
-  include: install.yml
